@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(cd /d \"E:\\\\flavorbot-ai\\\\rannabot\")",
+      "Bash(npm run *)"
+    ]
+  }
+}

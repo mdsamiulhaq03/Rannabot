@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RannaBot
+
+An AI-powered Bangladeshi recipe generator. Enter your available ingredients, pick your preferences, and get a complete recipe with step-by-step instructions, nutrition info, and serving suggestions.
+
+## Tech Stack
+
+- **Framework** — Next.js 16 (App Router)
+- **Language** — TypeScript
+- **Styling** — Tailwind CSS v4 + shadcn/ui
+- **Animation** — Framer Motion, GSAP
+- **AI** — Groq API (`llama-3.3-70b-versatile`)
+
+## Features
+
+- Ingredient-based recipe generation
+- Cuisine style selector (Bangladeshi regional + international)
+- Dietary filter (Halal, Vegetarian, Vegan, etc.)
+- Cook time and servings controls
+- Equipment selector
+- Nutrition estimate per serving
+- Ingredient substitutions
+- Chef tips and serving suggestions
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/mdsamiulhaq03/rannabot.git
+cd rannabot
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env.local` file in the root of the project:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+Get a free API key at [console.groq.com](https://console.groq.com).
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── api/recipes/route.ts           # Groq API endpoint
+│   ├── globals.css                    # Global styles + theme tokens
+│   ├── layout.tsx                     # Root layout
+│   └── page.tsx                       # Home page
+├── components/
+│   ├── ui/
+│   │   ├── chip-selector.tsx          # Reusable single-select chip
+│   │   ├── cuisine-selector-chips.tsx # Cuisine chip selector
+│   │   ├── grid-background.tsx        # Dot grid background
+│   │   ├── select.tsx                 # shadcn Select
+│   │   └── textarea.tsx               # shadcn Textarea
+│   ├── Header.tsx
+│   ├── InputForm.tsx
+│   ├── IngredientGrid.tsx
+│   ├── NutritionPanel.tsx
+│   ├── RecipeCard.tsx
+│   ├── RecipeGrid.tsx
+│   └── StepsList.tsx
+├── hooks/
+│   └── useRannaBot.ts                 # Fetch logic + state
+└── lib/
+    ├── prompt.ts                      # AI prompt builder
+    ├── types.ts                       # TypeScript interfaces
+    └── utils.ts                       # cn() utility
+```
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Required | Description |
+|---|---|---|
+| `GROQ_API_KEY` | Yes | Groq API key for LLM inference |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Rate Limits (Groq Free Tier)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Limit | Value |
+|---|---|
+| Requests per minute | 30 |
+| Requests per day | 14,400 |
+| Tokens per minute | 131,072 |
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
