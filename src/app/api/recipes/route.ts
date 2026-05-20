@@ -3,6 +3,32 @@ import Groq from "groq-sdk";
 import { buildPrompt } from "@/lib/prompt";
 import { FormData } from "@/lib/types";
 
+const ALLOWED_DIETARY = new Set(["", "Halal", "Vegetarian", "Vegan"]);
+const ALLOWED_CUISINES = new Set([
+  "Bangladeshi", "Dhaka-Style", "Chittagong", "Sylheti", "Rajshahi",
+  "Khulna", "Mughal", "Indian", "Middle Eastern", "Chinese", "Thai", "Italian", "Any",
+]);
+const ALLOWED_TIME = new Set(["15 min", "20 min", "30 min", "45 min", "60 min"]);
+const ALLOWED_SERVINGS = new Set(["1", "2", "3", "4", "5"]);
+const ALLOWED_EQUIPMENT = new Set([
+  "Stovetop", "Oven", "Microwave", "Air Fryer",
+  "Pressure Cooker", "Rice Cooker", "Grill", "Blender",
+]);
+
+function validateBody(body: FormData): string | null {
+  if (!body.ingredients || body.ingredients.trim() === "") return "Ingredients are required.";
+  if (body.ingredients.length > 1000) return "Ingredients must be under 1000 characters.";
+  if (!ALLOWED_DIETARY.has(body.dietary ?? "")) return "Invalid dietary option.";
+  if (!ALLOWED_CUISINES.has(body.cuisine ?? "")) return "Invalid cuisine option.";
+  if (!ALLOWED_TIME.has(body.time_limit ?? "")) return "Invalid time limit option.";
+  if (!ALLOWED_SERVINGS.has(body.servings ?? "")) return "Invalid servings option.";
+  if (
+    !Array.isArray(body.equipment) ||
+    body.equipment.some((e) => !ALLOWED_EQUIPMENT.has(e))
+  ) return "Invalid equipment selection.";
+  return null;
+}
+
 export async function POST(req: NextRequest) {
   if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
@@ -14,11 +40,9 @@ export async function POST(req: NextRequest) {
   try {
     const body: FormData = await req.json();
 
-    if (!body.ingredients || body.ingredients.trim() === "") {
-      return NextResponse.json(
-        { error: "Ingredients are required." },
-        { status: 400 }
-      );
+    const validationError = validateBody(body);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -48,7 +72,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(parsed);
   } catch (err: unknown) {
-    console.error("[/api/recipes]", err);
+    console.error("[/api/recipes]", err instanceof Error ? err.message : String(err));
     const message =
       err instanceof SyntaxError
         ? "Invalid response format. Please try again."

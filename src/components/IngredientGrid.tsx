@@ -31,15 +31,14 @@ export default function IngredientGrid({ ingredients }: { ingredients: Ingredien
               borderRadius: "8px",
               padding: "0.5rem 0.75rem",
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "0.5rem",
+              flexDirection: "column",
+              gap: "0.15rem",
             }}
           >
-            <span style={{ color: "#e4e4e7", fontSize: "0.85rem" }}>
+            <span style={{ color: "#e4e4e7", fontSize: "0.85rem", fontWeight: 600 }}>
               {ing.item}
             </span>
-            <span style={{ color: "#a1a1aa", fontWeight: 600, fontSize: "0.82rem", whiteSpace: "nowrap" }}>
+            <span style={{ color: "#a1a1aa", fontSize: "0.8rem" }}>
               {ing.amount}
             </span>
           </div>
