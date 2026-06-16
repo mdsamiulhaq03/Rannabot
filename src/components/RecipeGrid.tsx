@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ChefHat } from "lucide-react";
+import { Flame } from "lucide-react";
 import { Recipe } from "@/lib/types";
 import RecipeCard from "./RecipeCard";
 
@@ -14,14 +14,13 @@ export default function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
     const cards = gridRef.current.querySelectorAll<HTMLElement>("[data-recipe-card]");
     gsap.fromTo(
       cards,
-      { y: 40, scale: 0.97, opacity: 0 },
+      { y: 36, opacity: 0 },
       {
         y: 0,
-        scale: 1,
         opacity: 1,
-        duration: 0.55,
+        duration: 0.5,
         ease: "power3.out",
-        stagger: 0.18,
+        stagger: 0.15,
       }
     );
   }, [recipes]);
@@ -30,22 +29,35 @@ export default function RecipeGrid({ recipes }: { recipes: Recipe[] }) {
 
   return (
     <section ref={gridRef} style={{ position: "relative", zIndex: 10 }}>
-      <h2
+      <div
         style={{
-          color: "#ffffff",
-          fontSize: "1.1rem",
-          fontWeight: 600,
-          marginBottom: "1.25rem",
           display: "flex",
           alignItems: "center",
           gap: "0.5rem",
-          letterSpacing: "-0.01em",
+          marginBottom: "1.25rem",
         }}
       >
-        <ChefHat size={18} style={{ color: "#a1a1aa" }} />
-        <span>Generated Recipe</span>
-      </h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <Flame size={15} style={{ color: "#E07B30" }} />
+        <h2
+          style={{
+            color: "#a89880",
+            fontSize: "0.7rem",
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+          }}
+        >
+          Generated {recipes.length > 1 ? `${recipes.length} Recipes` : "Recipe"}
+        </h2>
+        <div
+          style={{
+            flex: 1,
+            height: "1px",
+            background: "linear-gradient(90deg, rgba(224,123,48,0.2), transparent)",
+          }}
+        />
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
         {recipes.map((recipe, i) => (
           <div key={i} data-recipe-card="">
             <RecipeCard recipe={recipe} index={i} />

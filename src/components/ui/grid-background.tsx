@@ -1,17 +1,33 @@
 export default function GridBackground() {
   return (
-    <div
-      className="fixed inset-0 z-0"
-      style={{
-        background: "#000000",
-        backgroundImage: `
-          radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.2) 1px, transparent 0),
-          radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.18) 1px, transparent 0),
-          radial-gradient(circle at 1px 1px, rgba(236, 72, 153, 0.15) 1px, transparent 0)
-        `,
-        backgroundSize: "20px 20px, 30px 30px, 25px 25px",
-        backgroundPosition: "0 0, 10px 10px, 15px 5px",
-      }}
-    />
+    <div className="fixed inset-0 z-0 grain-overlay">
+      {/* Warm top radial — spice lamp glow */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 90% 55% at 50% -5%, rgba(200, 110, 30, 0.18) 0%, rgba(150, 70, 10, 0.06) 45%, transparent 70%)",
+        }}
+      />
+      {/* Subtle bottom warm echo */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 60% 35% at 50% 105%, rgba(180, 90, 20, 0.07) 0%, transparent 65%)",
+        }}
+      />
+      {/* Leftward ambient drift */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse 50% 60% at -5% 50%, rgba(160, 80, 20, 0.05) 0%, transparent 60%)",
+        }}
+      />
+    </div>
   );
 }

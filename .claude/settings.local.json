@@ -3,7 +3,20 @@
     "allow": [
       "Bash(npm install *)",
       "Bash(cd /d \"E:\\\\flavorbot-ai\\\\rannabot\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "mcp__svelte__svelte-autofixer",
+      "Bash(git show *)",
+      "Bash(echo \"---exit: $?\")",
+      "Bash(git log *)",
+      "Bash(git grep *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git stash *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Skill(run)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000)"
     ]
   }
 }

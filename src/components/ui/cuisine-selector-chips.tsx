@@ -41,13 +41,13 @@ export default function CuisineSelectorChips({ value, onChange }: CuisineSelecto
             layout
             initial={false}
             animate={{
-              backgroundColor: isSelected ? "#1c1412" : "rgba(39, 39, 42, 0.5)",
+              backgroundColor: isSelected ? "rgba(224,123,48,0.12)" : "rgba(40, 32, 24, 0.6)",
             }}
             whileHover={{
-              backgroundColor: isSelected ? "#231714" : "rgba(39, 39, 42, 0.8)",
+              backgroundColor: isSelected ? "rgba(224,123,48,0.17)" : "rgba(40, 32, 24, 0.9)",
             }}
             whileTap={{
-              backgroundColor: isSelected ? "#150f0c" : "rgba(39, 39, 42, 0.9)",
+              backgroundColor: isSelected ? "rgba(224,123,48,0.08)" : "rgba(40, 32, 24, 1)",
             }}
             transition={{
               type: "spring",
@@ -60,8 +60,8 @@ export default function CuisineSelectorChips({ value, onChange }: CuisineSelecto
               inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium
               whitespace-nowrap overflow-hidden ring-1 ring-inset cursor-pointer
               ${isSelected
-                ? "text-[#ff9066] ring-[hsla(0,0%,100%,0.12)]"
-                : "text-zinc-400 ring-[hsla(0,0%,100%,0.06)]"}
+                ? "text-[#E07B30] ring-[rgba(224,123,48,0.25)]"
+                : "text-[#7a6a5a] ring-[rgba(240,200,150,0.07)]"}
             `}
           >
             <motion.div
@@ -84,8 +84,8 @@ export default function CuisineSelectorChips({ value, onChange }: CuisineSelecto
                     transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
                     className="absolute right-0"
                   >
-                    <div className="w-4 h-4 rounded-full bg-[#ff9066] flex items-center justify-center">
-                      <Check className="w-3 h-3 text-[#1c1412]" strokeWidth={1.5} />
+                    <div className="w-4 h-4 rounded-full bg-[#E07B30] flex items-center justify-center">
+                      <Check className="w-3 h-3 text-[#1a0900]" strokeWidth={2} />
                     </div>
                   </motion.span>
                 )}

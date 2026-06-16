@@ -31,15 +31,14 @@ const DIETARY_OPTIONS = [
   { value: "Halal", label: "Halal" },
   { value: "Vegetarian", label: "Vegetarian" },
   { value: "Vegan", label: "Vegan" },
-
 ];
 
 const TIME_OPTIONS = [
-  { value: "15 min", label: "15 min" },
-  { value: "20 min", label: "20 min" },
-  { value: "30 min", label: "30 min" },
-  { value: "45 min", label: "45 min" },
-  { value: "60 min", label: "60 min" },
+  { value: "15 min", label: "15m" },
+  { value: "20 min", label: "20m" },
+  { value: "30 min", label: "30m" },
+  { value: "45 min", label: "45m" },
+  { value: "60 min", label: "1h" },
 ];
 
 const SERVINGS_OPTIONS = [
@@ -51,21 +50,23 @@ const SERVINGS_OPTIONS = [
 ];
 
 const LABEL_STYLE: React.CSSProperties = {
-  color: "#71717a",
+  color: "#7a6a5a",
   textTransform: "uppercase",
   letterSpacing: "0.1em",
   fontWeight: 600,
-  fontSize: "0.68rem",
-  marginBottom: "0.5rem",
+  fontSize: "0.65rem",
+  marginBottom: "0.55rem",
   display: "block",
 };
 
 const INPUT_STYLE: React.CSSProperties = {
-  background: "rgba(255,255,255,0.04)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  color: "#fafafa",
+  background: "rgba(240,200,150,0.03)",
+  border: "1px solid rgba(240,200,150,0.08)",
+  color: "#f5efe8",
   borderRadius: "0.6rem",
 };
+
+const FIELD_GAP = "1.6rem";
 
 export default function InputForm({ onGenerate, loading, error }: InputFormProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -81,8 +82,8 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
     if (!cardRef.current) return;
     gsap.fromTo(
       cardRef.current,
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.25 }
+      { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.75, ease: "power3.out", delay: 0.3 }
     );
   }, []);
 
@@ -95,7 +96,7 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!ingredients.trim()) {
-      setIngError("Please enter ingredients.");
+      setIngError("Please enter at least one ingredient.");
       return;
     }
     setIngError("");
@@ -113,17 +114,31 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
     <div
       ref={cardRef}
       style={{
-        background: "#0a0a0a",
-        border: "1px solid rgba(255,255,255,0.07)",
-        borderRadius: "20px",
+        background: "#0d0b09",
+        border: "1px solid rgba(240,200,150,0.07)",
+        borderRadius: "22px",
         padding: "2rem",
         position: "relative",
         zIndex: 10,
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.4), 0 8px 40px rgba(0,0,0,0.6), 0 0 60px rgba(224,123,48,0.03)",
       }}
     >
+      {/* Top accent line */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: "10%",
+          right: "10%",
+          height: "1px",
+          background: "linear-gradient(90deg, transparent, rgba(224,123,48,0.35), transparent)",
+          borderRadius: "1px",
+        }}
+      />
+
       <form onSubmit={handleSubmit}>
         {/* Ingredients */}
-        <div style={{ marginBottom: "1.75rem" }}>
+        <div style={{ marginBottom: FIELD_GAP }}>
           <label style={LABEL_STYLE}>Ingredients</label>
           <Textarea
             value={ingredients}
@@ -134,41 +149,48 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
             placeholder="e.g. chicken, garlic, tomatoes, spinach..."
             rows={3}
             style={{ ...INPUT_STYLE, resize: "none" }}
-            className="focus:border-white/20 focus:ring-2 focus:ring-white/10 placeholder:text-zinc-600 w-full"
+            className="focus:border-[rgba(224,123,48,0.3)] focus:ring-2 focus:ring-[rgba(224,123,48,0.1)] placeholder:text-[#4a3a2a] w-full"
           />
-          {ingError && (
-            <p style={{ color: "#ef4444", fontSize: "0.8rem", marginTop: "0.35rem" }}>
-              {ingError}
-            </p>
-          )}
+          <AnimatePresence>
+            {ingError && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                style={{ color: "#ef4444", fontSize: "0.78rem", marginTop: "0.35rem" }}
+              >
+                {ingError}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Cuisine chips */}
-        <div style={{ marginBottom: "1.75rem" }}>
+        <div style={{ marginBottom: FIELD_GAP }}>
           <label style={LABEL_STYLE}>Cuisine Style</label>
           <CuisineSelectorChips value={cuisine} onChange={setCuisine} />
         </div>
 
         {/* Dietary chips */}
-        <div style={{ marginBottom: "1.75rem" }}>
+        <div style={{ marginBottom: FIELD_GAP }}>
           <label style={LABEL_STYLE}>Dietary</label>
           <ChipSelector options={DIETARY_OPTIONS} value={dietary} onChange={setDietary} />
         </div>
 
-        {/* Time chips */}
-        <div style={{ marginBottom: "1.75rem" }}>
-          <label style={LABEL_STYLE}>Time</label>
-          <ChipSelector options={TIME_OPTIONS} value={timeLimit} onChange={setTimeLimit} />
+        {/* Time + Servings — side by side */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: FIELD_GAP }}>
+          <div>
+            <label style={LABEL_STYLE}>Cook Time</label>
+            <ChipSelector options={TIME_OPTIONS} value={timeLimit} onChange={setTimeLimit} />
+          </div>
+          <div>
+            <label style={LABEL_STYLE}>Servings</label>
+            <ChipSelector options={SERVINGS_OPTIONS} value={servings} onChange={setServings} />
+          </div>
         </div>
 
-        {/* Servings chips */}
-        <div style={{ marginBottom: "1.75rem" }}>
-          <label style={LABEL_STYLE}>Servings</label>
-          <ChipSelector options={SERVINGS_OPTIONS} value={servings} onChange={setServings} />
-        </div>
-
-        {/* Equipment toggles — multi-select chip style */}
-        <div style={{ marginBottom: "1.75rem" }}>
+        {/* Equipment toggles */}
+        <div style={{ marginBottom: FIELD_GAP }}>
           <label style={LABEL_STYLE}>Equipment</label>
           <motion.div
             className="flex flex-wrap gap-2 overflow-visible"
@@ -185,13 +207,13 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
                   layout
                   initial={false}
                   animate={{
-                    backgroundColor: active ? "#1c1412" : "rgba(39, 39, 42, 0.5)",
+                    backgroundColor: active ? "rgba(224,123,48,0.12)" : "rgba(40, 32, 24, 0.6)",
                   }}
                   whileHover={{
-                    backgroundColor: active ? "#231714" : "rgba(39, 39, 42, 0.8)",
+                    backgroundColor: active ? "rgba(224,123,48,0.17)" : "rgba(40, 32, 24, 0.9)",
                   }}
                   whileTap={{
-                    backgroundColor: active ? "#150f0c" : "rgba(39, 39, 42, 0.9)",
+                    backgroundColor: active ? "rgba(224,123,48,0.08)" : "rgba(40, 32, 24, 1)",
                   }}
                   transition={{
                     type: "spring",
@@ -204,8 +226,8 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
                     inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium
                     whitespace-nowrap overflow-hidden ring-1 ring-inset cursor-pointer
                     ${active
-                      ? "text-[#ff9066] ring-[hsla(0,0%,100%,0.12)]"
-                      : "text-zinc-400 ring-[hsla(0,0%,100%,0.06)]"}
+                      ? "text-[#E07B30] ring-[rgba(224,123,48,0.25)]"
+                      : "text-[#7a6a5a] ring-[rgba(240,200,150,0.07)]"}
                   `}
                 >
                   <motion.div
@@ -223,8 +245,8 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
                           transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
                           className="absolute right-0"
                         >
-                          <div className="w-4 h-4 rounded-full bg-[#ff9066] flex items-center justify-center">
-                            <Check className="w-3 h-3 text-[#1c1412]" strokeWidth={1.5} />
+                          <div className="w-4 h-4 rounded-full bg-[#E07B30] flex items-center justify-center">
+                            <Check className="w-3 h-3 text-[#1a0900]" strokeWidth={2} />
                           </div>
                         </motion.span>
                       )}
@@ -237,64 +259,58 @@ export default function InputForm({ onGenerate, loading, error }: InputFormProps
         </div>
 
         {/* API Error */}
-        {error && (
-          <div
-            style={{
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid rgba(239,68,68,0.25)",
-              borderRadius: "10px",
-              padding: "0.75rem 1rem",
-              marginBottom: "1rem",
-              color: "#fca5a5",
-              fontSize: "0.88rem",
-            }}
-          >
-            {error}
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              style={{
+                background: "rgba(239,68,68,0.07)",
+                border: "1px solid rgba(239,68,68,0.2)",
+                borderRadius: "10px",
+                padding: "0.75rem 1rem",
+                marginBottom: "1rem",
+                color: "#fca5a5",
+                fontSize: "0.85rem",
+              }}
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Generate Button */}
         <button
           type="submit"
           disabled={loading}
-          className="btn-shimmer"
+          className="btn-spice"
           style={{
             width: "100%",
-            padding: "0.9rem",
+            padding: "0.95rem",
             borderRadius: "12px",
-            border: "1px solid rgba(255,255,255,0.12)",
-            background: loading ? "rgba(255,255,255,0.04)" : "#ffffff",
-            color: loading ? "#71717a" : "#000000",
+            border: "none",
+            background: loading ? "rgba(240,200,150,0.05)" : undefined,
+            color: loading ? "#7a6a5a" : undefined,
             fontWeight: 700,
-            fontSize: "1rem",
+            fontSize: "0.95rem",
             cursor: loading ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: "0.5rem",
-            letterSpacing: "0.03em",
-            transition: "transform 0.15s ease, box-shadow 0.15s ease",
-            boxShadow: loading ? "none" : "0 2px 16px rgba(255,255,255,0.08)",
-          }}
-          onMouseEnter={(e) => {
-            if (!loading) {
-              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 4px 24px rgba(255,255,255,0.15)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = loading ? "none" : "0 2px 16px rgba(255,255,255,0.08)";
+            letterSpacing: "0.04em",
+            boxShadow: loading ? "none" : "0 4px 20px rgba(224,123,48,0.25)",
           }}
         >
           {loading ? (
             <>
-              <Loader2 size={18} className="animate-spin" />
+              <Loader2 size={17} className="animate-spin" />
               <span>Generating...</span>
             </>
           ) : (
             <>
-              <Sparkles size={18} />
+              <Sparkles size={17} />
               <span>Generate Recipes</span>
             </>
           )}

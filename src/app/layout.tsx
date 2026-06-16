@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hind_Siliguri, DM_Sans } from "next/font/google";
+import { Hind_Siliguri, DM_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const hindSiliguri = Hind_Siliguri({
@@ -16,6 +16,14 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "RannaBot | AI Bangladeshi Kitchen Companion",
   description:
@@ -29,9 +37,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${hindSiliguri.variable} ${dmSans.variable} h-full`}>
+    <html lang="en" className={`${hindSiliguri.variable} ${dmSans.variable} ${playfairDisplay.variable} h-full`}>
       <body
-        style={{ backgroundColor: "#000000", color: "#fafafa", minHeight: "100vh" }}
+        style={{ backgroundColor: "#000000", color: "#f5efe8", minHeight: "100vh" }}
       >
         {children}
       </body>
